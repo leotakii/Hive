@@ -1,0 +1,14 @@
+Each motif instance is given as a triple "seq#, position, substring",
+one per line and comma-separated.  An example would be
+  2,-649,TGGACGA
+
+    * "seq#" is the input sequence number in which the instance is
+      found.
+    * "position" is the position of the first nucleotide in
+      "substring", measured from the 3' end of the input string. For the
+      example given above, the T occurs at position -649, where the
+      last character of the input sequence is numbered -1.
+    * "substring" is given on the strand of the input string,
+      independent of the strand your program predicts to contain the
+      instance. That is, "substring" must be a substring of our
+      supplied sequence "seq#" beginning at "position". 
