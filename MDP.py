@@ -39,7 +39,56 @@ from Hive import Hive
 from Hive import Utilities
 
 # ---- CREATE TEST CASE
+class CandidateMotif:
+	# representacao do motivo candidato
+	def __init__(self,vector):
+		self.motif = finalMotif(vector)
+		self.similarity = similarity(vector)
+		self.support = support(vector)
+		self.complexity = complexity(complexity)
 
+
+
+
+
+
+def positionCountMatrix(dna_sequences):
+	positionCountMatrix = np.zeros([4,len(dna_sequences[0])],dtype=int) #o tamanho de todas as sequencias eh igual
+											  #A
+											  #C
+											  #G
+											  #T
+
+	for sequence in dna_sequences:
+		i = 0
+		while i < len(sequence): #itera bases da sequencia
+			if sequence[i] == 'A':
+				positionCountMatrix[0][i] += 1
+				
+			elif sequence[i] == 'C':
+				positionCountMatrix[1][i] += 1
+
+			elif sequence[i] == 'G':
+				positionCountMatrix[2][i] += 1
+
+			elif sequence[i] == 'T':
+				positionCountMatrix[3][i] += 1
+			i += 1
+
+	for baseVector in positionCountMatrix:
+		for base in baseVector:
+			print base,
+		print '\n'
+
+
+def finalMotif(vector):
+	return
+def similarity(vector):
+	return
+def support(vector):
+	return
+def complexity(vector):
+	return
 def evaluator(vector):
 	"""
 	A n-dimensional Rastrigin's function is defined as:
@@ -72,7 +121,8 @@ def readFasta(filePath):
 		dna_sequences.append(sequence)
 		print(dna_sequences[len(dna_sequences)-1]+'\n')
 	
-
+	pcm = positionCountMatrix(dna_sequences)
+	return
 # ---- SOLVE TEST CASE WITH ARTIFICIAL BEE COLONY ALGORITHM
 
 def run():
@@ -93,7 +143,16 @@ def run():
 
 	# prints out best solution
 	#print("Fitness Value ABC: {0}".format(model.best))
+	
+
+
+
 	readFasta("assets/Real/dm01r.fasta")
+	###############readFasta(sys.argv[1]) #1 = path name
+
+
+
+
 	"""dna_sequences = []
 	fasta_sequences = SeqIO.parse(open("assets/Real/dm01r.fasta"),'fasta')
 	for fasta in fasta_sequences:
