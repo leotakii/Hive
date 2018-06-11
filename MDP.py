@@ -33,10 +33,14 @@ try:
 except:
 	raise ImportError("Numpy module not installed.")
 
+import random
+import time
 from Bio import SeqIO
 #from Hive import DNASequence as dnaSeq
 from Hive import Hive
 from Hive import Utilities
+
+random.seed(time.time()) #testando deterministicamente
 
 # ---- CREATE TEST CASE
 class CandidateMotif:
@@ -51,13 +55,63 @@ class CandidateMotif:
 
 
 
+def finalMotif():
+	finalMotif = []
+	
+	candidate = CandidateMotif();
+	
 
+	return finalMotif
+	
+def thresholdConsensus(dna_sequences, consensus):
+	dna_approvedSequences = []
+	seqId = 0
+	for sequence in dna_sequences:
+		similarityRate = 0 #contador de similaridade com o consenso para cada sequencia
+		i = 0
+		while i < len(consensus):
+			if sequence[i] == consensus[i]:
+				similarityRate +=1
+			i += 1
+		similarityRate = similarityRate/len(consensus) #average
+		print("Seq",seqId,"similarity % =",similarityRate)
+		if similarityRate > 0.50: #aprovacao
+			dna_approvedSequences.append(sequence)
+		seqId += 1
+	
+	print("#Approved :",len(dna_approvedSequences))
+	return dna_approvedSequences
+		
+def consensusMotif(positionCountMatrix):
+	consensus = []
+	i = 0
+
+	while i < len(positionCountMatrix[0]):
+		w_consensus = [] #para evitar bias para determinada base
+		window = [positionCountMatrix[0][i],positionCountMatrix[1][i],positionCountMatrix[2][i],positionCountMatrix[3][i]]
+		if window[0] >= window[1] and window[0] >= window[2] and window[0] >= window[3]:
+			w_consensus.append('A')
+		if window[1] >= window[0] and window[1] >= window[2] and window[1] >= window[3]:
+			w_consensus.append('C')
+		if window[2] >= window[0] and window[2] >= window[1] and window[2] >= window[3]:
+			w_consensus.append('G')
+		if window[3] >= window[0] and window[3] >= window[1] and window[3] >= window[2]:
+			w_consensus.append('T')
+		
+		consensus.append(random.choice(w_consensus)) # um dos empatantes eh escolhido com probabilidades equivalentes
+		
+		print(consensus[i], end='')
+		i += 1
+	print('\n')		
+	return consensus
+	
 def positionCountMatrix(dna_sequences):
-	positionCountMatrix = np.zeros([4,len(dna_sequences[0])],dtype=int) #o tamanho de todas as sequencias eh igual
-											  #A
-											  #C
-											  #G
-											  #T
+	positionCountMatrix = np.zeros([4,len(dna_sequences[0])],dtype=int) #o tamanho de todas as sequencias eh igual	
+														#col_1 col_2 ... col_n
+											  #Linha A
+											  #Linha C
+											  #Linha G
+											  #Linha T
 
 	for sequence in dna_sequences:
 		i = 0
@@ -74,11 +128,16 @@ def positionCountMatrix(dna_sequences):
 			elif sequence[i] == 'T':
 				positionCountMatrix[3][i] += 1
 			i += 1
-
+	
+	names = ['A','C','G','T']
+	i = 0
 	for baseVector in positionCountMatrix:
+		print("#",names[i], end=" ")
 		for base in baseVector:
-			print base,
-		print '\n'
+			print(base, end=" ")
+		print('\n')
+		i += 1
+	return positionCountMatrix
 
 
 def finalMotif(vector):
@@ -121,9 +180,24 @@ def readFasta(filePath):
 		dna_sequences.append(sequence)
 		print(dna_sequences[len(dna_sequences)-1]+'\n')
 	
-	pcm = positionCountMatrix(dna_sequences)
-	return
-# ---- SOLVE TEST CASE WITH ARTIFICIAL BEE COLONY ALGORITHM
+	return dna_sequences
+	
+def subSequences(dna_sequences):
+	dna_subSequences = []
+
+	motifSize = random.randint(7,64) #tamanho do motivo
+	#motifSize = 7 #tamanho do motivo
+	print("size = ",motifSize)
+	sequenceSize = len(dna_sequences[0])
+	
+	for sequence in dna_sequences:
+		motifStart = random.randint(0,sequenceSize-motifSize)
+		print("start = ",motifStart)
+		subSequence = sequence[motifStart:motifStart+motifSize]
+		dna_subSequences.append(subSequence)
+		print(subSequence)
+		
+	return dna_subSequences
 
 def run():
 	
@@ -147,7 +221,16 @@ def run():
 
 
 
-	readFasta("assets/Real/dm01r.fasta")
+	dna_sequences = readFasta("assets/Real/testDNA.fasta")
+	dna_subSequences = subSequences(dna_sequences)
+	""" #bloco com sequencia inteira
+	pcm = positionCountMatrix(dna_sequences)
+	consensus = consensusMotif(pcm)
+	thresholdConsensus(dna_sequences,consensus)
+	"""
+	pcm = positionCountMatrix(dna_subSequences)
+	consensus = consensusMotif(pcm)
+	thresholdConsensus(dna_subSequences,consensus)
 	###############readFasta(sys.argv[1]) #1 = path name
 
 
