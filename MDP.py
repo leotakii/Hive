@@ -198,14 +198,15 @@ def readFasta(filePath):
 	
 def subSequences(dna_sequences):
 	dna_subSequences = []
-
+	sequenceSize = len(dna_sequences[0])
 	motifSize = random.randint(7,64) #tamanho do motivo
 	#motifSize = 7 #tamanho do motivo
 	print("size = ",motifSize)
-	sequenceSize = len(dna_sequences[0])
-	
+	if sequenceSize < motifSize:
+		motifSize = motifSize % sequenceSize
+
 	for sequence in dna_sequences:
-		motifStart = random.randint(0,sequenceSize-motifSize)
+		motifStart = random.randint(0,sequenceSize-motifSize-1) #-1 pois o vetor comeca no 0
 		print("start = ",motifStart)
 		subSequence = sequence[motifStart:motifStart+motifSize]
 		dna_subSequences.append(subSequence)
