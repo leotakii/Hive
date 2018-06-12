@@ -46,23 +46,25 @@ random.seed(time.time()) #testando deterministicamente
 # ---- CREATE TEST CASE
 class CandidateMotif:
 	# representacao do motivo candidato
-	def __init__(self,vector):
-		self.motif = finalMotif(vector)
+	def __init__(self,motif,startVector,similarity,complexity,support):
+		self.motif = motif
+		self.length = len(motif)
+		self.startVector = startVector
 		self.similarity = similarity(vector)
 		self.support = support(vector)
 		self.complexity = complexity(complexity)
 
 
-
-
-
-def finalMotif():
+def getMotif(self):
 	finalMotif = []
 	
 	candidate = CandidateMotif();
 	
 
 	return finalMotif
+
+def getSupport():
+
 
 
 
@@ -92,7 +94,7 @@ def thresholdConsensus(dna_sequences, consensus):
 				similarityRate +=1
 			i += 1
 		similarityRate = similarityRate/len(consensus) #average
-		print("Seq",seqId,"similarity % =",similarityRate)
+		print("Seq",seqId,"threshold approval% =",similarityRate)
 		if similarityRate > 0.50: #aprovacao
 			dna_approvedSequences.append(sequence)
 		seqId += 1
@@ -129,7 +131,7 @@ def printDNAMatrix(DNAMatrix):
 	for baseVector in DNAMatrix:
 		print("#",names[i],":",end=" ")
 		for base in baseVector:
-			print(base, end=" ")
+			print(format(round(base,3),'.2f'), end=" ")
 		print('\n')
 		i += 1
 	return
@@ -188,30 +190,36 @@ def readFasta(filePath):
 	
 	dna_sequences = []
 	fasta_sequences = SeqIO.parse(open(filePath),'fasta')
-
+	i = 0
 	for fasta in fasta_sequences:
 		name,sequence = fasta.id,str(fasta.seq)
 		dna_sequences.append(sequence)
-		print(dna_sequences[len(dna_sequences)-1]+'\n')
-	
+		print(">Seq",i,dna_sequences[len(dna_sequences)-1])
+		i += 1
 	return dna_sequences
 	
-def subSequences(dna_sequences):
+def randomSubSequences(dna_sequences):
+
 	dna_subSequences = []
 	sequenceSize = len(dna_sequences[0])
-	motifSize = random.randint(7,64) #tamanho do motivo
-	#motifSize = 7 #tamanho do motivo
-	print("size = ",motifSize)
-	if sequenceSize < motifSize:
-		motifSize = motifSize % sequenceSize
+	lowerLimit = 7
+	higherLimit = 64
+	if sequenceSize < higherLimit: #ajusta o tamanho da sequencia para um menor valor
+		higherLimit = sequenceSize
 
-	for sequence in dna_sequences:
-		motifStart = random.randint(0,sequenceSize-motifSize-1) #-1 pois o vetor comeca no 0
-		print("start = ",motifStart)
-		subSequence = sequence[motifStart:motifStart+motifSize]
-		dna_subSequences.append(subSequence)
-		print(subSequence)
-		
+	if sequenceSize >= lowerLimit: #uma sequencia nao eh considerada como motivo se for menor que 7
+		motifSize = random.randint(lowerLimit,higherLimit) #tamanho do motivo
+		#motifSize = 7 #tamanho do motivo
+		print("candidate size = ",motifSize)
+
+		for sequence in dna_sequences:
+			motifStart = random.randint(0,sequenceSize-motifSize) #-1 pois o vetor comeca no 0
+			print("start = ",motifStart)
+			subSequence = sequence[motifStart:motifStart+motifSize]
+			dna_subSequences.append(subSequence)
+			print(subSequence)
+	else:
+		print("Sequencias de tamanho insuficiente:",sequenceSize,"<",lowerLimit)
 	return dna_subSequences
 
 def positionFrequencyMatrix(positionCountMatrix): #calcula as frequencias
@@ -277,6 +285,20 @@ def complexity(motif):
 	complexity = math.log(motifSizeFactorial/productBasesFactorial,4) #logaritmo base 4 (numero de bases) 
 	return complexity
 
+def isBiased(support,totalSequences):
+	if totalSequences <= 4 :#minimo dado pelos autores (Alvarez)
+		if support >= 2 :
+			isBiased = False
+		else :
+			isBiased = True
+	else :
+		if support >=3 :
+			isBiased = False
+		else :
+			isBiased = True
+
+	return isBiased
+
 def run():
 	
 	# creates model
@@ -299,8 +321,8 @@ def run():
 
 
 
-	dna_sequences = readFasta("assets/Real/testDNA.fasta")
-	dna_subSequences = subSequences(dna_sequences)
+	dna_sequences = readFasta("assets/Real/mus01r.fasta")
+	dna_subSequences = randomSubSequences(dna_sequences)
 	""" #bloco com sequencia inteira
 	pcm = positionCountMatrix(dna_sequences)
 	consensus = consensusMotif(pcm)
@@ -311,15 +333,21 @@ def run():
 	dna_approvedSequences = thresholdConsensus(dna_subSequences,consensus)
 	finalPcm = positionCountMatrix(dna_approvedSequences)
 	finalPfm = positionFrequencyMatrix(finalPcm)
+	print("Motif:")
 	finalMotif = consensusMotif(finalPcm)
 	similarityMotif = similarity(finalPfm)
 	complexityMotif = complexity(finalMotif)
-
 	supportMotif = len(dna_approvedSequences)
+	biased = isBiased(supportMotif,len(dna_subSequences))
 	print("Similarity:",similarityMotif)
 	print("Complexity:",complexityMotif)
 	print("Support:",supportMotif)
+	print("Biased?",biased)
+
+
 	###############readFasta(sys.argv[1]) #1 = path name
+
+
 
 
 
