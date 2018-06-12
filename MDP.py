@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 
 # ---- MODULE DOCSTRING
-
+from __future__ import print_function,division
 __doc__ = """
 
 (C) Hive, Romain Wuilbercq, 2017
@@ -35,6 +35,7 @@ except:
 
 import random
 import time
+import math	
 from Bio import SeqIO
 #from Hive import DNASequence as dnaSeq
 from Hive import Hive
@@ -62,7 +63,24 @@ def finalMotif():
 	
 
 	return finalMotif
-	
+
+
+
+###################################
+#Codigo de fatorial retirado de https://stackoverflow.com/questions/16325988/factorial-of-a-large-number-in-python
+def range_prod(lo,hi):
+    if lo+1 < hi:
+        mid = (hi+lo)//2
+        return range_prod(lo,mid) * range_prod(mid+1,hi)
+    if lo == hi:
+        return lo
+    return lo*hi
+
+def treefactorial(n):
+    if n < 2:
+        return 1
+    return range_prod(1,n)
+ ####################################   
 def thresholdConsensus(dna_sequences, consensus):
 	dna_approvedSequences = []
 	seqId = 0
@@ -100,13 +118,25 @@ def consensusMotif(positionCountMatrix):
 		
 		consensus.append(random.choice(w_consensus)) # um dos empatantes eh escolhido com probabilidades equivalentes
 		
-		print(consensus[i], end='')
+		print (consensus[i], end = '')
 		i += 1
 	print('\n')		
 	return consensus
-	
+
+def printDNAMatrix(DNAMatrix):
+	names = ['A','C','G','T']
+	i = 0
+	for baseVector in DNAMatrix:
+		print("#",names[i],":",end=" ")
+		for base in baseVector:
+			print(base, end=" ")
+		print('\n')
+		i += 1
+	return
+
 def positionCountMatrix(dna_sequences):
-	positionCountMatrix = np.zeros([4,len(dna_sequences[0])],dtype=int) #o tamanho de todas as sequencias eh igual	
+	sequenceSize = len(dna_sequences[0])
+	positionCountMatrix = np.zeros([4,sequenceSize],dtype=int) #o tamanho de todas as sequencias eh igual	
 														#col_1 col_2 ... col_n
 											  #Linha A
 											  #Linha C
@@ -128,26 +158,10 @@ def positionCountMatrix(dna_sequences):
 			elif sequence[i] == 'T':
 				positionCountMatrix[3][i] += 1
 			i += 1
-	
-	names = ['A','C','G','T']
-	i = 0
-	for baseVector in positionCountMatrix:
-		print("#",names[i], end=" ")
-		for base in baseVector:
-			print(base, end=" ")
-		print('\n')
-		i += 1
+	print ('PCM')
+	printDNAMatrix(positionCountMatrix)
 	return positionCountMatrix
 
-
-def finalMotif(vector):
-	return
-def similarity(vector):
-	return
-def support(vector):
-	return
-def complexity(vector):
-	return
 def evaluator(vector):
 	"""
 	A n-dimensional Rastrigin's function is defined as:
@@ -199,6 +213,69 @@ def subSequences(dna_sequences):
 		
 	return dna_subSequences
 
+def positionFrequencyMatrix(positionCountMatrix): #calcula as frequencias
+	i = 0
+	sumWindow = 0.0
+	window = []
+	sequenceSize = len(positionCountMatrix[0])
+	positionFrequencyMatrix = np.zeros([4,sequenceSize]) #cria uma matriz de floats
+	
+	while i < sequenceSize:
+
+		window = [positionCountMatrix[0][i],positionCountMatrix[1][i],positionCountMatrix[2][i],positionCountMatrix[3][i]]
+		sumWindow = window[0] + window[1] + window[2] + window[3] #somatorio de nucleotideos na posicao i
+		positionFrequencyMatrix[0][i] = float(window[0]/sumWindow)
+		positionFrequencyMatrix[1][i] = float(window[1]/sumWindow)
+		positionFrequencyMatrix[2][i] = float(window[2]/sumWindow)
+		positionFrequencyMatrix[3][i] = float(window[3]/sumWindow)
+
+		i += 1
+
+	print ('PFM')
+	printDNAMatrix(positionFrequencyMatrix)
+	return positionFrequencyMatrix
+
+def similarity(positionFrequencyMatrix):
+	i = 0
+	sequenceSize = len(positionFrequencyMatrix[0])
+	maxSum = 0.0
+	while i < sequenceSize:
+		window = [positionFrequencyMatrix[0][i],positionFrequencyMatrix[1][i],positionFrequencyMatrix[2][i],positionFrequencyMatrix[3][i]]
+		maxSum += max(window)
+		i += 1
+
+	similarity = maxSum/sequenceSize
+	return similarity
+
+def complexity(motif):
+	motifSize = len(motif)
+
+	numA = 0
+	numC = 0
+	numG = 0
+	numT = 0
+	motifSizeFactorial = treefactorial(motifSize)
+	i = 0
+	while i < motifSize: #conta a quantidade de cada base
+		if motif[i] == 'A':
+			numA += 1
+				
+		elif motif[i] == 'C':
+			numC += 1
+
+		elif motif[i] == 'G':
+			numG += 1
+
+		elif motif[i] == 'T':
+			numT += 1
+		i += 1
+
+	productBasesFactorial = treefactorial(numA)*treefactorial(numC)*treefactorial(numG)*treefactorial(numT)
+							#produtorio do fatorial do numero de cada base
+
+	complexity = math.log(motifSizeFactorial/productBasesFactorial,4) #logaritmo base 4 (numero de bases) 
+	return complexity
+
 def run():
 	
 	# creates model
@@ -230,7 +307,17 @@ def run():
 	"""
 	pcm = positionCountMatrix(dna_subSequences)
 	consensus = consensusMotif(pcm)
-	thresholdConsensus(dna_subSequences,consensus)
+	dna_approvedSequences = thresholdConsensus(dna_subSequences,consensus)
+	finalPcm = positionCountMatrix(dna_approvedSequences)
+	finalPfm = positionFrequencyMatrix(finalPcm)
+	finalMotif = consensusMotif(finalPcm)
+	similarityMotif = similarity(finalPfm)
+	complexityMotif = complexity(finalMotif)
+
+	supportMotif = len(dna_approvedSequences)
+	print("Similarity:",similarityMotif)
+	print("Complexity:",complexityMotif)
+	print("Support:",supportMotif)
 	###############readFasta(sys.argv[1]) #1 = path name
 
 
