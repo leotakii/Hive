@@ -38,7 +38,7 @@ import time
 import math	
 from Bio import SeqIO
 #from Hive import DNASequence as dnaSeq
-from Hive import Hive
+from Hive import HiveMotif
 from Hive import Utilities
 
 random.seed(time.time()) 
@@ -198,7 +198,36 @@ def readFasta(filePath):
 		print(">Seq",i,dna_sequences[len(dna_sequences)-1])
 		i += 1
 	return dna_sequences
-	
+
+
+def sequenceFromSolution(dna_sequences, solutionVector):
+	dna_solutionInstance = []
+	dna_subSequences = []
+	sequenceSize = len(dna_sequences[0])
+	lowerLimit = 7
+	higherLimit = 64
+	if sequenceSize < higherLimit: #ajusta o tamanho da sequencia para um menor valor
+		higherLimit = sequenceSize
+
+	if sequenceSize >= lowerLimit: #uma sequencia nao eh considerada como motivo se for menor que 7
+		motifSize = solutionVector[0] #tamanho do motivo
+		i = 1
+		#motifSize = 7 #tamanho do motivo
+		#print("candidate size = ",motifSize)
+        
+		for sequence in dna_sequences:
+			motifStart = solutionVector[i] #-1 pois o vetor comeca no 0
+			print("start = ",motifStart)
+			subSequence = sequence[motifStart:motifStart+motifSize]
+			dna_subSequences.append(subSequence)
+			print(subSequence)
+			i += 1
+	else:
+		print("Sequencias de tamanho insuficiente:",sequenceSize,"<",lowerLimit)
+
+	return dna_subSequences
+
+
 def randomSubSequences(dna_sequences):
 	dna_solutionInstance = []
 	dna_subSequences = []
@@ -318,13 +347,9 @@ def run():
 
 	solutionData = randomSubSequences(dna_sequences)
 	solutionInstance = solutionData[0]
-	print("Solution Instance: ",solutionInstance)
 	dna_subSequences = solutionData[1]
-	""" #bloco com sequencia inteira
-	pcm = positionCountMatrix(dna_sequences)
-	consensus = consensusMotif(pcm)
-	thresholdConsensus(dna_sequences,consensus)
-	"""
+	print("Solution Instance: ",solutionInstance)
+	
 	pcm = positionCountMatrix(dna_subSequences)
 	consensus = consensusMotif(pcm)
 	dna_approvedSequences = thresholdConsensus(dna_subSequences,consensus)
@@ -343,26 +368,27 @@ def run():
 
 
 	###############readFasta(sys.argv[1]) #1 = path name
-
+"""
 	dnaLength = len(dna_sequences[0])
 	#primeiro limitante eh tamanho do motivo,
-	model = Hive.BeeHive(lower = [7] ,
-	                     upper = [64] ,
-	                     fun       = evaluator ,
-	                     numb_bees =  50       ,
-	                     max_itrs  =  100       ,
-	                     max_trials = 10		,
-	                     dna_sequences = dna_sequences)
+	model = HiveMotif.BeeHive(lower      = [0],
+	                          upper      = [64],
+	                          dna_sequences = dna_sequences,
+	                          fun        = similarity,
+	                          numb_bees  = 50,
+	                          max_itrs   = 100,
+	                          max_trials = 10
+	                          )
 
 	# runs model
-	cost = model.run()
+	#cost = model.run()
 
 	# plots convergence
 	Utilities.ConvergencePlot(cost)
 
 	# prints out best solution
 	print("Fitness Value ABC: {0}".format(model.best))
-
+"""
 	# creates model
 	#ndim = int(10)
 	#model = Hive.BeeHive(lower = [-5.12]*ndim  ,
