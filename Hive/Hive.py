@@ -37,8 +37,18 @@ import random
 import sys
 import copy
 
-
 # ---- BEE CLASS
+class CandidateMotif(object):
+    # representacao do motivo candidato
+    def __init__(self,motif,solution,similarity,complexity,support):
+        self.motif = motif
+        self.solution = solution
+        self.similarity = similarity
+        self.support = support
+        self.complexity = complexity
+
+
+
 
 class Bee(object):
     """ Creates a bee object. """
@@ -149,7 +159,7 @@ class BeeHive(object):
         return cost
 
     def __init__(self                 ,
-                 lower, upper         ,
+                 lower, upper, dna_sequences,
                  fun          = None  ,
                  numb_bees    =  30   ,
                  max_itrs     = 100   ,
@@ -187,13 +197,13 @@ class BeeHive(object):
         # checks input
         assert (len(upper) == len(lower)), "'lower' and 'upper' must be a list of the same length."
 
-        # generates a seed for the random number generator
+        """# generates a seed for the random number generator
         if (seed == None):
             self.seed = random.randint(0, 1000)
         else:
             self.seed = seed
         random.seed(self.seed)
-
+        """
         # computes the number of employees
         self.size = int((numb_bees + numb_bees % 2))
 
