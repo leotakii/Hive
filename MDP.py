@@ -337,74 +337,43 @@ def isBiased(support,totalSequences):
 	return isBiased
 
 def run():
-	
-	
-	
+    ###############readFasta(sys.argv[1]) #1 = path name
+    dna_sequences = readFasta("assets/Real/mus01r.fasta")
 
+    solutionData = randomSubSequences(dna_sequences)
+    solutionInstance = solutionData[0]
+    dna_subSequences = solutionData[1]
+    print("Solution Instance: ",solutionInstance)
 
+    pcm = positionCountMatrix(dna_subSequences)
+    consensus = consensusMotif(pcm)
+    dna_approvedSequences = thresholdConsensus(dna_subSequences,consensus)
+    finalPcm = positionCountMatrix(dna_approvedSequences)
+    finalPfm = positionFrequencyMatrix(finalPcm)
+    print("Motif:")
+    finalMotif = consensusMotif(finalPcm)
+    motifSimilarity = similarity(finalPfm)
+    motifComplexity = complexity(finalMotif)
+    motifSupport= len(dna_approvedSequences)
+    biased = isBiased(motifSupport,len(dna_subSequences))
+    print("Similarity:",motifSimilarity)
+    print("Complexity:",motifComplexity)
+    print("Support:",motifSupport)
+    print("Biased?",biased)
 
-	dna_sequences = readFasta("assets/Real/mus01r.fasta")
+    dnaLength = len(dna_sequences[0])
+    model = HiveMotif.BeeHive(
+    lower = [0],
+    upper      = [64],
+    dna_sequences = dna_sequences,
+    fun        = similarity,
+    numb_bees  = 50,
+    max_itrs   = 100,
+    max_trials = 10)
+    cost = model.run()
+    print("Fitness Value ABC: {0}".format(model.best))
+    Utilities.ConvergencePlot(cost)
 
-	solutionData = randomSubSequences(dna_sequences)
-	solutionInstance = solutionData[0]
-	dna_subSequences = solutionData[1]
-	print("Solution Instance: ",solutionInstance)
-	
-	pcm = positionCountMatrix(dna_subSequences)
-	consensus = consensusMotif(pcm)
-	dna_approvedSequences = thresholdConsensus(dna_subSequences,consensus)
-	finalPcm = positionCountMatrix(dna_approvedSequences)
-	finalPfm = positionFrequencyMatrix(finalPcm)
-	print("Motif:")
-	finalMotif = consensusMotif(finalPcm)
-	motifSimilarity = similarity(finalPfm)
-	motifComplexity = complexity(finalMotif)
-	motifSupport= len(dna_approvedSequences)
-	biased = isBiased(motifSupport,len(dna_subSequences))
-	print("Similarity:",motifSimilarity)
-	print("Complexity:",motifComplexity)
-	print("Support:",motifSupport)
-	print("Biased?",biased)
-
-
-	###############readFasta(sys.argv[1]) #1 = path name
-"""
-	dnaLength = len(dna_sequences[0])
-	#primeiro limitante eh tamanho do motivo,
-	model = HiveMotif.BeeHive(lower      = [0],
-	                          upper      = [64],
-	                          dna_sequences = dna_sequences,
-	                          fun        = similarity,
-	                          numb_bees  = 50,
-	                          max_itrs   = 100,
-	                          max_trials = 10
-	                          )
-
-	# runs model
-	#cost = model.run()
-
-	# plots convergence
-	Utilities.ConvergencePlot(cost)
-
-	# prints out best solution
-	print("Fitness Value ABC: {0}".format(model.best))
-"""
-	# creates model
-	#ndim = int(10)
-	#model = Hive.BeeHive(lower = [-5.12]*ndim  ,
-	#                     upper = [ 5.12]*ndim  ,
-	#                     fun       = evaluator ,
-	#                     numb_bees =  50       ,
-	#                     max_itrs  =  100       ,)
-
-	# runs model
-	#cost = model.run()
-
-	# plots convergence
-	#Utilities.ConvergencePlot(cost)
-
-	# prints out best solution
-	#print("Fitness Value ABC: {0}".format(model.best))
 
 if __name__ == "__main__":
 	run()
