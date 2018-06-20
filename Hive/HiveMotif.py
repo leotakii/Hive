@@ -410,12 +410,13 @@ class BeeHive(object):
         """ Runs an Artificial Bee Colony (ABC) algorithm. """
 
         cost = {}; cost["best"] = []; cost["mean"] = []
+        
         for itr in range(self.max_itrs):
 
             # employees phase
             for index in range(self.size):
                 self.send_employee(index)
-
+            """
             # onlookers phase
             self.send_onlookers()
 
@@ -432,7 +433,7 @@ class BeeHive(object):
             # prints out information about computation
             if self.verbose:
                 self._verbose(itr, cost)
-
+		"""
         return cost
 
     def __init__(self                 ,
@@ -583,7 +584,7 @@ class BeeHive(object):
 
         # produces a mutant based on current bee and bee's friend
         zombee.vector[d] = self._mutate(d, index, bee_ix)
-
+        
         # computes fitness of mutant
         zombee.value = self.evaluate(zombee.vector)
         zombee._fitness()
@@ -594,6 +595,7 @@ class BeeHive(object):
             self.population[index].counter = 0
         else:
             self.population[index].counter += 1
+        
 
     def send_onlookers(self):
         """
@@ -718,9 +720,8 @@ class BeeHive(object):
             :param int other_bee   : index of another bee to cross-over
 
         """
-
         return self.population[current_bee].vector[dim]    + \
-               (random.random() - 0.5) * 2                 * \
+               random.choice([-1,1])                       * \
                (self.population[current_bee].vector[dim] - self.population[other_bee].vector[dim])
 
 

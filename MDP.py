@@ -372,7 +372,7 @@ def run():
     max_trials = 10)
     cost = model.run()
     print("Fitness Value ABC: {0}".format(model.best))
-    Utilities.ConvergencePlot(cost)
+    #Utilities.ConvergencePlot(cost)
 
 
 if __name__ == "__main__":
