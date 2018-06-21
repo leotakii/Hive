@@ -122,10 +122,12 @@ def positionCountMatrix(dna_subsequences):
     #o tamanho de todas as sequencias eh igual
     dna_sequences = dna_subsequences
     sequenceSize = len(dna_sequences[0])
+    #print(dna_subsequences)
     positionCountMatrix = np.zeros([4,sequenceSize],dtype=int)
-    for sequence in dna_sequences:
-        i = 0
-        while i < len(sequence):
+    for j in range(len(dna_sequences)):
+        sequence = dna_sequences[j]
+
+        for i in range(len(sequence)):
             if sequence[i] == 'A':
                 positionCountMatrix[0][i] += 1
             elif sequence[i] == 'C':
@@ -157,7 +159,32 @@ def evaluator(vector):
 
 	return 10 * vector.size + sum(vector*vector - 10 * np.cos(2 * np.pi * vector))
 
+def sequenceFromSolution(dna_sequences, solutionVector):
+    dna_solutionInstance = []
+    dna_subSequences = []
+    sequenceSize = len(dna_sequences[0])
+    lowerLimit = 7
+    higherLimit = 64
+    if sequenceSize < higherLimit: #ajusta o tamanho da sequencia para um menor valor
+        higherLimit = sequenceSize
 
+    if sequenceSize >= lowerLimit: #uma sequencia nao eh considerada como motivo se for menor que 7
+        motifSize = solutionVector[0] #tamanho do motivo
+        i = 1
+        #motifSize = 7 #tamanho do motivo
+        #print("candidate size = ",motifSize)
+        
+        for sequence in dna_sequences:
+            motifStart = solutionVector[i] #-1 pois o vetor comeca no 0
+            print("start = ",motifStart)
+            subSequence = sequence[motifStart:motifStart+motifSize]
+            dna_subSequences.append(subSequence)
+            print(subSequence)
+            i += 1
+    else:
+        print("Sequencias de tamanho insuficiente:",sequenceSize,"<",lowerLimit)
+
+    return dna_subSequences
 
 
 
@@ -203,27 +230,35 @@ def randomSubSequences(dna_sequences):
     returnValues.append(dna_subSequences)
     return returnValues
 
-
+def printDNAMatrix(DNAMatrix):
+    names = ['A','C','G','T']
+    i = 0
+    for baseVector in DNAMatrix:
+        print("#",names[i],":",end=" ")
+        for base in baseVector:
+            print(format(round(base,3),'.2f'), end=" ")
+        print('\n')
+        i += 1
+    return
 def positionFrequencyMatrix(positionCountMatrix): #calcula as frequencias
-	i = 0
-	sumWindow = 0.0
-	window = []
-	sequenceSize = len(positionCountMatrix[0])
-	positionFrequencyMatrix = np.zeros([4,sequenceSize]) #cria uma matriz de floats
-	
-	while i < sequenceSize:
+    i = 0
+    sumWindow = 0.0
+    window = []
+    sequenceSize = len(positionCountMatrix[0])
+    positionFrequencyMatrix = np.zeros([4,sequenceSize]) #cria uma matriz de floats
 
-		window = [positionCountMatrix[0][i],positionCountMatrix[1][i],positionCountMatrix[2][i],positionCountMatrix[3][i]]
-		sumWindow = window[0] + window[1] + window[2] + window[3] #somatorio de nucleotideos na posicao i
-		positionFrequencyMatrix[0][i] = float(window[0]/sumWindow)
-		positionFrequencyMatrix[1][i] = float(window[1]/sumWindow)
-		positionFrequencyMatrix[2][i] = float(window[2]/sumWindow)
-		positionFrequencyMatrix[3][i] = float(window[3]/sumWindow)
+    for i in range(sequenceSize):
+        #print(i)
+        window = [positionCountMatrix[0][i],positionCountMatrix[1][i],positionCountMatrix[2][i],positionCountMatrix[3][i]]
+        sumWindow = window[0] + window[1] + window[2] + window[3] #somatorio de nucleotideos na posicao i
+        positionFrequencyMatrix[0][i] = float(window[0]/sumWindow)
+        positionFrequencyMatrix[1][i] = float(window[1]/sumWindow)
+        positionFrequencyMatrix[2][i] = float(window[2]/sumWindow)
+        positionFrequencyMatrix[3][i] = float(window[3]/sumWindow)
 
-		i += 1
 
 	#print ('PFM')
-	#printDNAMatrix(positionFrequencyMatrix)
+	
 	return positionFrequencyMatrix
 
 def similarity(positionFrequencyMatrix):
@@ -294,6 +329,17 @@ class CandidateMotif(object):
         self.support = support
         self.complexity = complexity
 
+    def _printSolution(self):
+        print("=========================")
+        for base in self.motif:
+            print(base, end = "")
+        print("")
+        print(self.solution)
+        print("Support", self.support)
+        print("Similarity",self.similarity)
+        print("Complexity",self.complexity)
+        print("=========================")
+
 class Bee(object):
     """ Creates a bee object. """
 
@@ -312,14 +358,26 @@ class Bee(object):
         """
         self.dna_sequences = dna_sequences
         biased = True        #enquanto nao houver solucao valida, instancia uma nova
-        resultVector = randomSubSequences(self.dna_sequences)
-        solution = resultVector[0]
-        self.dna_subSequences = resultVector[1]
-        pcm = positionCountMatrix(self.dna_subSequences)
-        consensus = consensusMotif(pcm)
-        dna_approvedSequences = thresholdConsensus(self.dna_subSequences,consensus)
-        motifSupport= len(dna_approvedSequences)
-        biased = isBiased(motifSupport,len(self.dna_subSequences))
+        resultVector = []
+        solution = -1
+        self.dna_subSequence = []
+        consensus = []
+        pcm = []
+        motifSupport = []
+        dna_approvedSequences = []
+
+        while biased == True:
+            resultVector = randomSubSequences(self.dna_sequences)
+            solution = resultVector[0]
+            self.dna_subSequences = resultVector[1]
+            pcm = positionCountMatrix(self.dna_subSequences)
+            #print(self.dna_subSequences)
+            #printDNAMatrix(pcm)
+            consensus = consensusMotif(pcm)
+            
+            dna_approvedSequences = thresholdConsensus(self.dna_subSequences,consensus)
+            motifSupport= len(dna_approvedSequences)
+            biased = isBiased(motifSupport,len(self.dna_subSequences))
         
         finalPcm = positionCountMatrix(dna_approvedSequences)
         finalPfm = positionFrequencyMatrix(finalPcm)
@@ -327,15 +385,12 @@ class Bee(object):
         motifSimilarity = similarity(finalPfm)
         motifComplexity = complexity(finalMotif)
         
-        
         self.solutionVector = solution	    
         self.candidate = CandidateMotif(finalMotif,solution,motifSimilarity,motifComplexity,motifSupport)
         self.vector = solution
-        
-                
-        self.valid = biased 
+        self.valid = biased
         self.value = complexity
-        self._printSolution()
+        self.candidate._printSolution()
 
         # creates a random solution vector
         #self._random(lower, upper)
@@ -361,15 +416,7 @@ class Bee(object):
         #################################
         self.counter = 0
     
-    def _printSolution(self):
-    	print("==","Biased:",self.valid,"==================")
-        for base in self.candidate.motif:
-            print(base, end = "")
-        print("")
-        print("Support", self.candidate.support)
-        print("Similarity",self.candidate.similarity)
-        print("Complexity",self.candidate.complexity)
-        print("=========================")
+
         
 
 
@@ -444,8 +491,14 @@ class BeeHive(object):
             # prints out information about computation
             if self.verbose:
                 self._verbose(itr, cost)
-            print(self.best)
-		
+        print("\n")
+        print("****BEST SOLUTION****")
+        self.solution._printSolution()
+
+        sequenceFromSolution(globSequences,self.solution.solution)
+            
+        #for best in cost["best"]:
+            #print(best)
         return cost
 
     def __init__(self                 ,
