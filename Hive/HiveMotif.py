@@ -332,12 +332,11 @@ class Bee(object):
         self.candidate = CandidateMotif(finalMotif,solution,motifSimilarity,motifComplexity,motifSupport)
         self.vector = solution
         
-        for base in finalMotif:
-            print(base, end = "")
-        print("\n")
-        
+                
         self.valid = biased 
-        
+        self.value = complexity
+        self._printSolution()
+
         # creates a random solution vector
         #self._random(lower, upper)
         """
@@ -358,10 +357,22 @@ class Bee(object):
         self._fitness()
         # initialises trial limit counter - i.e. abandonment counter
         #################################
-        self.value = self.candidate.similarity
+        self.value = self.candidate.complexity
         #################################
         self.counter = 0
+    
+    def _printSolution(self):
+    	print("==","Biased:",self.valid,"==================")
+        for base in self.candidate.motif:
+            print(base, end = "")
+        print("")
+        print("Support", self.candidate.support)
+        print("Similarity",self.candidate.similarity)
+        print("Complexity",self.candidate.complexity)
+        print("=========================")
         
+
+
     def _random(self, lower, upper):
         """ Initialises a solution vector randomly. """
 
@@ -416,7 +427,7 @@ class BeeHive(object):
             # employees phase
             for index in range(self.size):
                 self.send_employee(index)
-            """
+            
             # onlookers phase
             self.send_onlookers()
 
@@ -433,7 +444,8 @@ class BeeHive(object):
             # prints out information about computation
             if self.verbose:
                 self._verbose(itr, cost)
-		"""
+            print(self.best)
+		
         return cost
 
     def __init__(self                 ,
@@ -493,10 +505,11 @@ class BeeHive(object):
         # assigns properties of algorithm
         self.dim = len(dna_sequences)+1 
         self.max_itrs = max_itrs
-        if (max_trials == None):
-            self.max_trials = 0.6 * self.size * self.dim
-        else:
-            self.max_trials = max_trials
+        #if (max_trials == None):
+        #    self.max_trials = 0.6 * self.size * self.dim
+        #else:
+        #    self.max_trials = max_trials
+        self.max_trials = max_trials
         self.selfun = selfun
         self.extra_params = extra_params
 
@@ -506,7 +519,7 @@ class BeeHive(object):
         self.upper    = upper
 
         # initialises current best and its a solution vector
-        self.best = sys.float_info.max #maior valor float do python
+        self.best = 0
         self.solution = None
 
         # creates a bee hive
@@ -531,7 +544,7 @@ class BeeHive(object):
         index  = values.index(max(values)) #Maximize
         if (values[index] > self.best):
             self.best     = values[index]
-            self.solution = self.population[index].vector
+            self.solution = self.population[index].candidate
 
     def compute_probability(self):
         """
@@ -586,7 +599,7 @@ class BeeHive(object):
         zombee.vector[d] = self._mutate(d, index, bee_ix)
         
         # computes fitness of mutant
-        zombee.value = self.evaluate(zombee.vector)
+        zombee.value = zombee.candidate.complexity
         zombee._fitness()
 
         # deterministic crowding

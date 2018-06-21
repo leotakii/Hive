@@ -282,16 +282,17 @@ def positionFrequencyMatrix(positionCountMatrix): #calcula as frequencias
 	return positionFrequencyMatrix
 
 def similarity(positionFrequencyMatrix):
-	i = 0
-	sequenceSize = len(positionFrequencyMatrix[0])
-	maxSum = 0.0
-	while i < sequenceSize:
-		window = [positionFrequencyMatrix[0][i],positionFrequencyMatrix[1][i],positionFrequencyMatrix[2][i],positionFrequencyMatrix[3][i]]
-		maxSum += max(window)
-		i += 1
+    i = 0
+    positionFrequencyMatrix = positionFrequencyMatrix
+    sequenceSize = len(positionFrequencyMatrix[0])
+    maxSum = 0.0
+    while i < sequenceSize:
+        window = [positionFrequencyMatrix[0][i],positionFrequencyMatrix[1][i],positionFrequencyMatrix[2][i],positionFrequencyMatrix[3][i]]
+        maxSum += max(window)
+        i += 1
 
-	similarity = maxSum/sequenceSize
-	return similarity
+    similarity = maxSum/sequenceSize
+    return similarity
 
 def complexity(motif):
 	motifSize = len(motif)
