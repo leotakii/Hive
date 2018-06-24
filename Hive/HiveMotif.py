@@ -113,20 +113,19 @@ def printDNAMatrix(DNAMatrix):
 	return
 """
 
-def positionCountMatrix(dna_subsequences):
+def positionCountMatrix(dna_subsequences): 
     #col_1 col_2 ... col_n
     #Linha A
     #Linha C
     #Linha G
     #Linha T
     #o tamanho de todas as sequencias eh igual
-    dna_sequences = dna_subsequences
-    sequenceSize = len(dna_sequences[0])
+    sequenceSize = len(dna_subsequences[0])
     #print(dna_subsequences)
     positionCountMatrix = np.zeros([4,sequenceSize],dtype=int)
-    for j in range(len(dna_sequences)):
-        sequence = dna_sequences[j]
-
+    #print(len(dna_subsequences))
+    for j in range(len(dna_subsequences)):
+        sequence = dna_subsequences[j]
         for i in range(len(sequence)):
             if sequence[i] == 'A':
                 positionCountMatrix[0][i] += 1
@@ -136,10 +135,10 @@ def positionCountMatrix(dna_subsequences):
                 positionCountMatrix[2][i] += 1
             elif sequence[i] == 'T':
                 positionCountMatrix[3][i] += 1
-            i += 1
-	#print ('PCM')
-	#printDNAMatrix(positionCountMatrix)
-	return positionCountMatrix
+        
+    #print ('PCM')
+    #printDNAMatrix(positionCountMatrix)
+    return positionCountMatrix
 
 def evaluator(vector):
 	"""
@@ -167,27 +166,21 @@ def sequenceFromSolution(dna_sequences, solutionVector):
     higherLimit = 64
     if sequenceSize < higherLimit: #ajusta o tamanho da sequencia para um menor valor
         higherLimit = sequenceSize
-
     if sequenceSize >= lowerLimit: #uma sequencia nao eh considerada como motivo se for menor que 7
         motifSize = solutionVector[0] #tamanho do motivo
         i = 1
         #motifSize = 7 #tamanho do motivo
         #print("candidate size = ",motifSize)
-        
         for sequence in dna_sequences:
             motifStart = solutionVector[i] #-1 pois o vetor comeca no 0
-            print("start = ",motifStart)
+            #print("start = ",motifStart)
             subSequence = sequence[motifStart:motifStart+motifSize]
             dna_subSequences.append(subSequence)
-            print(subSequence)
+            #print(subSequence)
             i += 1
     else:
         print("Sequencias de tamanho insuficiente:",sequenceSize,"<",lowerLimit)
-
     return dna_subSequences
-
-
-
 def readFasta(filePath):
 	
 	dna_sequences = []
@@ -201,7 +194,7 @@ def readFasta(filePath):
 	return dna_sequences
 	
 def randomSubSequences(dna_sequences):
-    dna_sequences = globSequences
+    dna_sequences = dna_sequences
     dna_solutionInstance = []
     dna_subSequences = []
     sequenceSize = len(dna_sequences[0])
@@ -236,7 +229,8 @@ def printDNAMatrix(DNAMatrix):
     for baseVector in DNAMatrix:
         print("#",names[i],":",end=" ")
         for base in baseVector:
-            print(format(round(base,3),'.2f'), end=" ")
+            print(base, end=" ")
+            #print(format(round(base,3),'.2f'), end=" ")
         print('\n')
         i += 1
     return
@@ -246,20 +240,16 @@ def positionFrequencyMatrix(positionCountMatrix): #calcula as frequencias
     window = []
     sequenceSize = len(positionCountMatrix[0])
     positionFrequencyMatrix = np.zeros([4,sequenceSize]) #cria uma matriz de floats
-
     for i in range(sequenceSize):
-        #print(i)
         window = [positionCountMatrix[0][i],positionCountMatrix[1][i],positionCountMatrix[2][i],positionCountMatrix[3][i]]
         sumWindow = window[0] + window[1] + window[2] + window[3] #somatorio de nucleotideos na posicao i
         positionFrequencyMatrix[0][i] = float(window[0]/sumWindow)
         positionFrequencyMatrix[1][i] = float(window[1]/sumWindow)
         positionFrequencyMatrix[2][i] = float(window[2]/sumWindow)
         positionFrequencyMatrix[3][i] = float(window[3]/sumWindow)
-
-
-	#print ('PFM')
-	
-	return positionFrequencyMatrix
+    #print ('PFM')
+    #printDNAMatrix(positionFrequencyMatrix)
+    return positionFrequencyMatrix
 
 def similarity(positionFrequencyMatrix):
 	i = 0   
@@ -317,6 +307,8 @@ def isBiased(support,totalSequences):
 	return isBiased
 	
 
+	
+
 
 
 # ---- BEE CLASS
@@ -357,6 +349,7 @@ class Bee(object):
 
         """
         self.dna_sequences = dna_sequences
+        #print(dna_sequences)
         biased = True        #enquanto nao houver solucao valida, instancia uma nova
         resultVector = []
         solution = -1
@@ -389,8 +382,7 @@ class Bee(object):
         self.candidate = CandidateMotif(finalMotif,solution,motifSimilarity,motifComplexity,motifSupport)
         self.vector = solution
         self.valid = biased
-        self.value = complexity
-        self.candidate._printSolution()
+        #self.candidate._printSolution()
 
         # creates a random solution vector
         #self._random(lower, upper)
@@ -408,12 +400,11 @@ class Bee(object):
             self.value = sys.float_info.max
         
         """
+        self.value = self.candidate.similarity
         
         self._fitness()
         # initialises trial limit counter - i.e. abandonment counter
-        #################################
-        self.value = self.candidate.complexity
-        #################################
+        
         self.counter = 0
     
 
@@ -441,7 +432,7 @@ class Bee(object):
         else:
             self.fitness = 1 + abs(self.value)
         """
-        self.fitness = self.candidate.complexity
+        self.fitness = self.value
 class BeeHive(object):
     """
 
@@ -491,11 +482,11 @@ class BeeHive(object):
             # prints out information about computation
             if self.verbose:
                 self._verbose(itr, cost)
-        print("\n")
-        print("****BEST SOLUTION****")
-        self.solution._printSolution()
+        #print("\n")
+        #print("****BEST SOLUTION****")
+        #self.bestSolution._printSolution()
 
-        sequenceFromSolution(globSequences,self.solution.solution)
+        #sequenceFromSolution(self.dna_sequences,self.bestSolution.solution)
             
         #for best in cost["best"]:
             #print(best)
@@ -503,10 +494,8 @@ class BeeHive(object):
 
     def __init__(self                 ,
                  lower, upper, dna_sequences,
+                 numb_bees, max_itrs, max_trials,
                  fun          = None  ,
-                 numb_bees    = 30    ,
-                 max_itrs     = 100   ,
-                 max_trials   = None  ,
                  selfun       = None  ,
                  seed         = None  ,
                  verbose      = False ,
@@ -549,9 +538,10 @@ class BeeHive(object):
         """
         
         self.dna_sequences = dna_sequences
-        global globSequences 
-        globSequences = dna_sequences
+        #print("AAA",len(self.dna_sequences))
         
+        #if(len(self.dna_sequences)<3):
+            #
         # computes the number of employees
         self.size = int((numb_bees + numb_bees % 2))
 
@@ -579,7 +569,7 @@ class BeeHive(object):
       
         #sequenceSize-motifSize !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         
-        self.population = [ Bee(lower, upper, fun, self.dna_sequences) for i in range(self.size) ]
+        self.population = [ Bee(lower, upper, self.dna_sequences) for i in range(self.size) ]
 
         # initialises best solution vector to food nectar
         self.find_best()
@@ -597,7 +587,7 @@ class BeeHive(object):
         index  = values.index(max(values)) #Maximize
         if (values[index] > self.best):
             self.best     = values[index]
-            self.solution = self.population[index].candidate
+            self.bestSolution = self.population[index].candidate
 
     def compute_probability(self):
         """
@@ -646,13 +636,14 @@ class BeeHive(object):
 
         # selects another bee
         bee_ix = index;
+        bee_ix = index;
         while (bee_ix == index): bee_ix = random.randint(0, self.size-1)
 
         # produces a mutant based on current bee and bee's friend
         zombee.vector[d] = self._mutate(d, index, bee_ix)
         
         # computes fitness of mutant
-        zombee.value = zombee.candidate.complexity
+        zombee.value = zombee.candidate.similarity
         zombee._fitness()
 
         # deterministic crowding
@@ -767,7 +758,7 @@ class BeeHive(object):
         if (trials[index] > self.max_trials):
 
             # creates a new scout bee randomly
-            self.population[index] = Bee(self.lower, self.upper, self.evaluate)
+            self.population[index] = Bee(self.lower, self.upper, self.dna_sequences)
 
             # sends scout bee to exploit its solution vector
             self.send_employee(index)
