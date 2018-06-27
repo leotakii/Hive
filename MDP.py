@@ -323,7 +323,7 @@ def readFasta(filePath):
 	for fasta in fasta_sequences:
 		name,sequence = fasta.id,str(fasta.seq)
 		dna_sequences.append(sequence)
-		print(">Seq",i,dna_sequences[len(dna_sequences)-1])
+		#print(">Seq",i,dna_sequences[len(dna_sequences)-1])
 		i += 1
 	return dna_sequences
 
@@ -361,27 +361,37 @@ def run():
     import glob
     import os
     import re
+    import sys
     path = "assets/Real/"
-
-    for filename in os.listdir(path):
+    objectives = ["support","similarity","complexity"]
+    for objective in objectives:
+        orig_stdout = sys.stdout
+        f = open(objective+'.txt', 'w')
+        sys.stdout = f
         
-        if re.match(".*r\.fasta", filename):
-            
-            
-            dna_sequences = readFasta(path+filename)
-            if(len(dna_sequences) > 1):
-                print(filename)
-                dnaLength = len(dna_sequences[0])
-                model = HiveMotif.BeeHive(lower = [0],
-                upper      = [64],
-                dna_sequences = dna_sequences,
-                numb_bees  = 50,
-                max_itrs   = 500,
-                max_trials = 10)
-                cost = model.run()
-                print("Fitness Value ABC: {0}".format(model.best))
-                model.bestSolution._printSolution()
-        
+        for filename in os.listdir(path):          
+            if re.match(".*r\.fasta", filename):
+                dna_sequences = readFasta(path+filename)
+                if(len(dna_sequences) > 1):
+                    print(">data set")
+                    print(filename[:-6])
+                    print(">instances")
+                    dnaLength = len(dna_sequences[0])
+                    model = HiveMotif.BeeHive(lower = [0],
+                    upper      = [64],
+                    dna_sequences = dna_sequences,
+                    numb_bees  = 200,
+                    max_itrs   = 200,
+                    max_trials = 20,
+                    obj = objective)
+                    cost = model.run()
+                    #print("Fitness Value ABC: {0}".format(model.best))
+                    model.bestSolution._printSolution(dna_sequences)
+                    print("Objective =",objective) 
+                    #break
+                    
+        sys.stdout = orig_stdout
+        f.close()
     
     """
     dna_sequences = readFasta("assets/Real/_testDNA.fasta")

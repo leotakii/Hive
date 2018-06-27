@@ -1,0 +1,632 @@
+>data set
+dm01r
+>instances
+=========================
+Final motif:TTGTTAAAA
+0,-419,CTGTTAATC
+3,-577,TTGTTAAAA
+Support 2
+Similarity 0.8333333333333334
+Complexity 4.64960400919
+=========================
+Objective = similarity
+>data set
+dm03r
+>instances
+=========================
+Final motif:ATATTTT
+1,-280,ATATTTG
+2,-1382,CTATTTT
+Support 2
+Similarity 0.8571428571428571
+Complexity 2.19615871139
+=========================
+Objective = similarity
+>data set
+dm04r
+>instances
+=========================
+Final motif:TTAAAAATCG
+1,-1022,TGAAAAATCG
+3,-181,TTGAAAACCT
+Support 2
+Similarity 0.8
+Complexity 6.14960400919
+=========================
+Objective = similarity
+>data set
+dm05r
+>instances
+=========================
+Final motif:ATTTGGTCCG
+1,-2198,ATTTGGTCGG
+2,-2100,ATTGAGCCCG
+Support 2
+Similarity 0.8
+Complexity 6.81056805664
+=========================
+Objective = similarity
+>data set
+hm01r
+>instances
+=========================
+Final motif:CTACAGGC
+1,-1616,CTGGCGGC
+7,-1101,CTCCAGGC
+11,-1739,CTACAGGC
+Support 3
+Similarity 0.8333333333333333
+Complexity 5.35712275883
+=========================
+Objective = similarity
+>data set
+hm02r
+>instances
+=========================
+Final motif:AGCCCCTGCG
+2,-115,AGGCCTTCCG
+5,-821,AGCCACTGCG
+7,-813,AGCCCCTGAG
+Support 3
+Similarity 0.8333333333333334
+Complexity 6.14960400919
+=========================
+Objective = similarity
+>data set
+hm03r
+>instances
+=========================
+Final motif:ACACTGG
+2,-867,CCACTGG
+3,-341,ACACTGA
+6,-369,ACAATGG
+7,-731,TCTCTGG
+Support 4
+Similarity 0.8214285714285714
+Complexity 4.64960400919
+=========================
+Objective = similarity
+>data set
+hm04r
+>instances
+=========================
+Final motif:GCTAAGCTG
+2,-1907,GCTAGGCTT
+7,-1630,CCAAAGCTG
+12,-1873,GTTAAGCTG
+Support 3
+Similarity 0.8148148148148148
+Complexity 6.44208525955
+=========================
+Objective = similarity
+>data set
+hm05r
+>instances
+=========================
+Final motif:TCACAGGAAG
+0,-339,TCACAAAAAG
+2,-435,TCACAGGGAG
+Support 2
+Similarity 0.85
+Complexity 6.81056805664
+=========================
+Objective = similarity
+>data set
+hm06r
+>instances
+=========================
+Final motif:GCGCCCCA
+3,-31,GCGCCCCT
+7,-81,GCGCGCCA
+8,-448,GCGGCCAA
+Support 3
+Similarity 0.8333333333333334
+Complexity 3.69615871139
+=========================
+Objective = similarity
+>data set
+hm07r
+>instances
+=========================
+Final motif:TAGCACTT
+1,-588,CATTACAT
+2,-708,GAGGACTT
+3,-522,TAGCACTT
+Support 3
+Similarity 0.7500000000000001
+Complexity 5.35712275883
+=========================
+Objective = similarity
+>data set
+hm08r
+>instances
+=========================
+Final motif:TGCAGGGGGAA
+1,-97,TGCAGGGGGGC
+6,-52,TGCAGGTGGAA
+9,-17,CGCAGGCGGAG
+Support 3
+Similarity 0.8181818181818182
+Complexity 6.58683856815
+=========================
+Objective = similarity
+>data set
+hm09r
+>instances
+=========================
+Final motif:CTCTCTG
+3,-1006,ATCTCTG
+4,-235,CTCTCTT
+9,-1113,CATTCTG
+Support 3
+Similarity 0.8095238095238095
+Complexity 3.56464150847
+=========================
+Objective = similarity
+>data set
+hm10r
+>instances
+=========================
+Final motif:GGCTACG
+0,-355,GGCTGGG
+1,-73,GACTACA
+2,-478,TGCTACG
+Support 3
+Similarity 0.7619047619047619
+Complexity 4.35712275883
+=========================
+Objective = similarity
+>data set
+hm11r
+>instances
+=========================
+Final motif:AAATCTCAAGGG
+3,-31,GAATCTGAAGGG
+5,-895,ATCCTGCAAGGG
+6,-932,AAATCTCCAGGG
+Support 3
+Similarity 0.7777777777777777
+Complexity 8.67180106887
+=========================
+Objective = similarity
+>data set
+hm12r
+>instances
+=========================
+Final motif:TGTTTATAGTAGAGTGTCA
+0,-310,TGTTTATAGGAAAGTGTCA
+1,-58,TCTCAATATTAGAGTCTCA
+Support 2
+Similarity 0.8157894736842105
+Complexity 13.8212333082
+=========================
+Objective = similarity
+>data set
+hm13r
+>instances
+=========================
+Final motif:TACTTAAATCTT
+0,-347,TACTAAACACTG
+2,-978,TACTTGAATCTT
+5,-978,TTTTTAAATTTT
+Support 3
+Similarity 0.7777777777777778
+Complexity 6.87931981851
+=========================
+Objective = similarity
+>data set
+hm14r
+>instances
+=========================
+Final motif:GATTCTTC
+0,-920,GATTTTTC
+1,-154,GAGTCTTC
+Support 2
+Similarity 0.875
+Complexity 4.85712275883
+=========================
+Objective = similarity
+>data set
+hm15r
+>instances
+=========================
+Final motif:GAAACTGAGC
+1,-1036,GAAACGGGGC
+2,-598,GAAACTGAGC
+Support 2
+Similarity 0.9
+Complexity 6.81056805664
+=========================
+Objective = similarity
+>data set
+hm16r
+>instances
+=========================
+Final motif:TCCATCTTCAA
+2,-426,TCCATCTGTAA
+3,-2075,TCCATCTTCAC
+5,-2683,CCCGGCTTCAA
+Support 3
+Similarity 0.8181818181818182
+Complexity 6.7478026156
+=========================
+Objective = similarity
+>data set
+hm17r
+>instances
+=========================
+Final motif:AGAGAGCA
+1,-453,AGAGAGGA
+8,-396,TGATAGCA
+10,-398,AGGGTGCA
+Support 3
+Similarity 0.7916666666666666
+Complexity 4.06464150847
+=========================
+Objective = similarity
+>data set
+hm18r
+>instances
+=========================
+Final motif:GGGTATGA
+1,-952,GGGCAGGA
+3,-1471,GGGTTTTA
+4,-1196,GTGTATGT
+Support 3
+Similarity 0.75
+Complexity 4.35712275883
+=========================
+Objective = similarity
+>data set
+hm19r
+>instances
+=========================
+Final motif:GGATCTGGT
+1,-311,GGAGCTGGA
+3,-484,GCATCTGCT
+4,-357,GGATGTGGT
+Support 3
+Similarity 0.8148148148148149
+Complexity 5.64960400919
+=========================
+Objective = similarity
+>data set
+hm20r
+>instances
+=========================
+Final motif:CAGCGAAG
+0,-1170,CAGCGAAG
+21,-834,ATCTGAAG
+28,-1425,CAGAGGAG
+Support 3
+Similarity 0.75
+Complexity 4.56464150847
+=========================
+Objective = similarity
+>data set
+hm21r
+>instances
+=========================
+Final motif:GCCTTTCTG
+0,-536,GCCTTGCTG
+2,-646,GCTTTTTGG
+4,-896,TCCTTTCTC
+Support 3
+Similarity 0.7777777777777779
+Complexity 5.14960400919
+=========================
+Objective = similarity
+>data set
+hm22r
+>instances
+=========================
+Final motif:GCCCCCCA
+0,-470,GGTCCCTC
+2,-496,GCCCCCCA
+4,-397,GCCTCCCA
+Support 3
+Similarity 0.7916666666666667
+Complexity 2.90367746103
+=========================
+Objective = similarity
+>data set
+hm23r
+>instances
+=========================
+Final motif:AGGCCAGG
+0,-451,AGGCCAGG
+2,-484,GGGGCAGG
+Support 2
+Similarity 0.875
+Complexity 4.35712275883
+=========================
+Objective = similarity
+>data set
+hm24r
+>instances
+=========================
+Final motif:GACCCGC
+0,-159,GTCCCGC
+1,-235,GACGCGA
+7,-186,GACCCAC
+Support 3
+Similarity 0.8095238095238095
+Complexity 3.35712275883
+=========================
+Objective = similarity
+>data set
+hm25r
+>instances
+=========================
+Final motif:AGACAAGC
+0,-156,AGATAAGA
+1,-300,AGACATGC
+Support 2
+Similarity 0.8125
+Complexity 4.35712275883
+=========================
+Objective = similarity
+>data set
+hm26r
+>instances
+=========================
+Final motif:CCAACCCCGCC
+0,-93,CAAACCCCGCC
+1,-513,ACGACCCCGCC
+7,-859,CCACCTCCTCC
+Support 3
+Similarity 0.8181818181818182
+Complexity 4.47564235748
+=========================
+Objective = similarity
+>data set
+mus01r
+>instances
+=========================
+Final motif:CACGACTTTGGA
+0,-203,CACGAGTTGAGA
+1,-443,CACTCCTTTGGA
+Support 2
+Similarity 0.7916666666666666
+Complexity 9.2478026156
+=========================
+Objective = similarity
+>data set
+mus02r
+>instances
+=========================
+Final motif:CTGACGGA
+3,-928,CTGACTGA
+7,-269,CTGAAGGA
+8,-578,ATAACGGG
+Support 3
+Similarity 0.7916666666666666
+Complexity 5.35712275883
+=========================
+Objective = similarity
+>data set
+mus03r
+>instances
+=========================
+Final motif:ACCCATCCTCACACC
+1,-112,ATCCATCATGACACC
+3,-426,ACACATACACACACA
+4,-177,TCCCTCCCTCCCTCC
+Support 3
+Similarity 0.7333333333333333
+Complexity 8.09802247467
+=========================
+Objective = similarity
+>data set
+mus04r
+>instances
+=========================
+Final motif:AGGAGAG
+1,-625,TTGAGAG
+5,-718,AGGAAAA
+6,-464,AGGAGAG
+Support 3
+Similarity 0.8095238095238095
+Complexity 2.56464150847
+=========================
+Objective = similarity
+>data set
+mus05r
+>instances
+=========================
+Final motif:TGTAAATTC
+0,-32,TATAAATTG
+1,-246,TGTAATTTC
+Support 2
+Similarity 0.8333333333333334
+Complexity 5.64960400919
+=========================
+Objective = similarity
+>data set
+mus06r
+>instances
+=========================
+Final motif:AAGACCT
+0,-498,AAGACCT
+1,-390,AAGAGAT
+Support 2
+Similarity 0.8571428571428571
+Complexity 4.35712275883
+=========================
+Objective = similarity
+>data set
+mus07r
+>instances
+=========================
+Final motif:TGTCCTG
+0,-1380,TGCCCTG
+3,-1325,TGTCCTG
+Support 2
+Similarity 0.9285714285714286
+Complexity 3.85712275883
+=========================
+Objective = similarity
+>data set
+mus08r
+>instances
+=========================
+Final motif:TGCTGAG
+1,-80,TGCAGAG
+2,-658,GGCTGAG
+Support 2
+Similarity 0.8571428571428571
+Complexity 4.35712275883
+=========================
+Objective = similarity
+>data set
+mus09r
+>instances
+=========================
+Final motif:CCATCTTG
+0,-461,CCATCTTG
+1,-234,CCATGACG
+Support 2
+Similarity 0.8125
+Complexity 5.06464150847
+=========================
+Objective = similarity
+>data set
+mus10r
+>instances
+=========================
+Final motif:GGTGGACG
+3,-422,GGTGGACG
+4,-341,GCTGCACA
+8,-620,GGAGGAGG
+Support 3
+Similarity 0.7916666666666667
+Complexity 4.19615871139
+=========================
+Objective = similarity
+>data set
+mus11r
+>instances
+=========================
+Final motif:TCTCTGCGGGCT
+2,-75,TCTCTGTGGGCG
+3,-384,TCTCTGCTGGCT
+5,-42,TGCCTGCGGGCT
+Support 3
+Similarity 0.8611111111111112
+Complexity 7.54028386596
+=========================
+Objective = similarity
+>data set
+mus12r
+>instances
+=========================
+Final motif:GCAAACCCGACCAAG
+0,-223,GCTAACCCGACCAAG
+2,-355,GAAAAGCCGATCACG
+Support 2
+Similarity 0.8333333333333334
+Complexity 9.34073588825
+=========================
+Objective = similarity
+>data set
+yst01r
+>instances
+=========================
+Final motif:TTTGTTT
+0,-114,TTTGTTT
+3,-58,TTCTTTT
+6,-431,AGTGTTT
+Support 3
+Similarity 0.8095238095238094
+Complexity 1.40367746103
+=========================
+Objective = similarity
+>data set
+yst02r
+>instances
+=========================
+Final motif:TCTGGAAAGCTATACTTCGGAACA
+1,-213,TCTGGAGAGCTATTGTTCAAAAAA
+2,-296,TTTGGAAAGCTATACTTCGGAGCA
+Support 2
+Similarity 0.8333333333333334
+Complexity 20.2164075566
+=========================
+Objective = similarity
+>data set
+yst03r
+>instances
+=========================
+Final motif:ATTACTTT
+1,-217,TTTTCTTT
+6,-224,AATCCTTT
+7,-290,CTTACTTT
+Support 3
+Similarity 0.7916666666666667
+Complexity 3.69615871139
+=========================
+Objective = similarity
+>data set
+yst04r
+>instances
+=========================
+Final motif:GAAAGAAAGAAAAAGA
+0,-128,CAATGCAAGAAATACA
+4,-537,GGAAGAAAAAAAAAGA
+6,-678,GAAAGAAAGAAAAAAA
+Support 3
+Similarity 0.8333333333333333
+Complexity 5.41486136754
+=========================
+Objective = similarity
+>data set
+yst05r
+>instances
+=========================
+Final motif:GCTAATTT
+0,-226,GTAAATTT
+1,-376,GCTAATTT
+Support 2
+Similarity 0.875
+Complexity 4.85712275883
+=========================
+Objective = similarity
+>data set
+yst06r
+>instances
+=========================
+Final motif:TATTTTTC
+2,-108,TATTTGAC
+3,-374,TAATTTTC
+5,-353,TCTTTTTT
+Support 3
+Similarity 0.7916666666666667
+Complexity 2.90367746103
+=========================
+Objective = similarity
+>data set
+yst08r
+>instances
+=========================
+Final motif:ATCAAAA
+1,-796,ATGAAAA
+4,-655,CTCAAAA
+6,-450,ATCACAC
+Support 3
+Similarity 0.8095238095238095
+Complexity 2.69615871139
+=========================
+Objective = similarity
+>data set
+yst09r
+>instances
+=========================
+Final motif:TTTATTTTATTTCT
+2,-865,TGTCTATTTTTCCT
+7,-110,TTTATTTTACTTCT
+14,-89,TTTATTTTCTCTAT
+Support 3
+Similarity 0.7857142857142856
+Complexity 5.04637857046
+=========================
+Objective = similarity

@@ -314,28 +314,62 @@ def isBiased(support,totalSequences):
 # ---- BEE CLASS
 class CandidateMotif(object):
     # representacao do motivo candidato
-    def __init__(self,motif,solution,similarity,complexity,support):
+    def __init__(self,motif,solution,similarity,complexity,support,consensus):
         self.motif = motif
         self.solution = solution
         self.similarity = similarity
         self.support = support
         self.complexity = complexity
+        self.consensus = consensus
 
-    def _printSolution(self):
+    def _printSolution(self,sequence):
+        finalSubSequences = sequenceFromSolution(sequence,self.solution)         
+        dna_approvedSequences = thresholdConsensus(finalSubSequences,self.consensus)
+        
+        negSolution = self._negativateSolution(sequence)
+        
+        
         print("=========================")
+        print("Final motif:",end = "")
         for base in self.motif:
             print(base, end = "")
         print("")
+        """
         print(self.solution)
+        print(negSolution)
+        """
+        i = 1
+        while i < len(self.solution):
+            currSeq = sequence[i-1]
+            substring = currSeq[self.solution[i]:self.solution[i]+self.solution[0]]
+            for approved in dna_approvedSequences:  
+                #print(approved,"?")
+                if approved == substring:
+                    #print(approved)
+                    print(i-1,",",negSolution[i],",",substring, sep='') #[self.solution[i]:self.solution[i]+self.solution[0]]
+                    #print(i-1,",",negSolution[i],",",currSeq[negSolution[i]:negSolution[i]+self.solution[0]-1], sep='') #[self.solution[i]:self.solution[i]+self.solution[0]]
+                    #print(negSolution[i],":",negSolution[i]+self.solution[0]-1)
+            i += 1
         print("Support", self.support)
         print("Similarity",self.similarity)
         print("Complexity",self.complexity)
         print("=========================")
+    
+    def _negativateSolution(self,sequence):
+        from copy import deepcopy
+        negSolution = deepcopy(self.solution)
+        seqLen = len(sequence[0])
+        i = 1
+        while i < len(self.solution):
+            negSolution[i]-=seqLen
+            i += 1
+        
+        return negSolution 
 
 class Bee(object):
     """ Creates a bee object. """
 
-    def __init__(self, lower, upper, dna_sequences, funcon=None):
+    def __init__(self, lower, upper, dna_sequences,obj, funcon=None):
         """
 
         Instantiates a bee object randomly.
@@ -348,6 +382,7 @@ class Bee(object):
             :param def  funcon : constraints function, must return a boolean
 
         """
+        self.obj = obj
         self.dna_sequences = dna_sequences
         #print(dna_sequences)
         biased = True        #enquanto nao houver solucao valida, instancia uma nova
@@ -369,6 +404,7 @@ class Bee(object):
             consensus = consensusMotif(pcm)
             
             dna_approvedSequences = thresholdConsensus(self.dna_subSequences,consensus)
+            
             motifSupport= len(dna_approvedSequences)
             biased = isBiased(motifSupport,len(self.dna_subSequences))
         
@@ -379,7 +415,7 @@ class Bee(object):
         motifComplexity = complexity(finalMotif)
         
         self.solutionVector = solution	    
-        self.candidate = CandidateMotif(finalMotif,solution,motifSimilarity,motifComplexity,motifSupport)
+        self.candidate = CandidateMotif(finalMotif,solution,motifSimilarity,motifComplexity,motifSupport,consensus)
         self.vector = solution
         self.valid = biased
         #self.candidate._printSolution()
@@ -400,7 +436,12 @@ class Bee(object):
             self.value = sys.float_info.max
         
         """
-        self.value = self.candidate.similarity
+        if(self.obj == 'similarity'):
+            self.value = self.candidate.similarity
+        elif(self.obj == 'support'):
+            self.value = self.candidate.support
+        elif(self.obj == 'complexity'):
+            self.value = self.candidate.complexity
         
         self._fitness()
         # initialises trial limit counter - i.e. abandonment counter
@@ -494,7 +535,7 @@ class BeeHive(object):
 
     def __init__(self                 ,
                  lower, upper, dna_sequences,
-                 numb_bees, max_itrs, max_trials,
+                 numb_bees, max_itrs, max_trials,obj,
                  fun          = None  ,
                  selfun       = None  ,
                  seed         = None  ,
@@ -536,7 +577,7 @@ class BeeHive(object):
             self.seed = seed
         random.seed(self.seed)
         """
-        
+        self.obj = obj
         self.dna_sequences = dna_sequences
         #print("AAA",len(self.dna_sequences))
         
@@ -569,7 +610,7 @@ class BeeHive(object):
       
         #sequenceSize-motifSize !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         
-        self.population = [ Bee(lower, upper, self.dna_sequences) for i in range(self.size) ]
+        self.population = [ Bee(lower, upper, self.dna_sequences,self.obj) for i in range(self.size) ]
 
         # initialises best solution vector to food nectar
         self.find_best()
@@ -643,7 +684,12 @@ class BeeHive(object):
         zombee.vector[d] = self._mutate(d, index, bee_ix)
         
         # computes fitness of mutant
-        zombee.value = zombee.candidate.similarity
+        if(zombee.obj == 'similarity'):
+            zombee.value = zombee.candidate.similarity
+        elif(zombee.obj == 'support'):
+            zombee.value = zombee.candidate.support
+        elif(zombee.obj == 'complexity'):
+            zombee.value = zombee.candidate.complexity
         zombee._fitness()
 
         # deterministic crowding
@@ -758,7 +804,7 @@ class BeeHive(object):
         if (trials[index] > self.max_trials):
 
             # creates a new scout bee randomly
-            self.population[index] = Bee(self.lower, self.upper, self.dna_sequences)
+            self.population[index] = Bee(self.lower, self.upper, self.dna_sequences,self.obj)
 
             # sends scout bee to exploit its solution vector
             self.send_employee(index)
